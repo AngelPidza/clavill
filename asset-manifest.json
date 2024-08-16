@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/clavill/static/css/main.03dd482c.css",
+    "main.js": "/clavill/static/js/main.137f8e6a.js",
+    "static/js/453.ad6eb26e.chunk.js": "/clavill/static/js/453.ad6eb26e.chunk.js",
+    "static/media/51176892r1-871-929_hq.gif": "/clavill/static/media/541c9b8f476b22e0161293c7d23dde4c51176892r1-871-929_hq.07a1f2920905068b1ae0.gif",
+    "index.html": "/clavill/index.html",
+    "main.03dd482c.css.map": "/clavill/static/css/main.03dd482c.css.map",
+    "main.137f8e6a.js.map": "/clavill/static/js/main.137f8e6a.js.map",
+    "453.ad6eb26e.chunk.js.map": "/clavill/static/js/453.ad6eb26e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.03dd482c.css",
+    "static/js/main.137f8e6a.js"
+  ]
+}
