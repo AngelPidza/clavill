@@ -21,6 +21,26 @@ const ENCODING_TABLES = {
     's': 'U3V4W5X6', 't': 'Y7Z8A9B0', 'u': 'C1D2E3F4', 'v': 'G5H6I7J8', 'w': 'K9L0M1N2', 'x': 'O3P4Q5R6',
     'y': 'S7T8U9V0', 'z': 'W1X2Y3Z4', ' ': '3SP4C3FG'
   },
+  '16': {
+    'a': 'A1B2C3D4E5F6G7H8', 'b': 'I9J0K1L2M3N4O5P6', 'c': 'Q7R8S9T0U1V2W3X4', 'd': 'Y5Z6A7B8C9D0E1F2',
+    'e': 'G3H4I5J6K7L8M9N0', 'f': 'P1Q2R3S4T5U6V7W8', 'g': 'X9Y0Z1A2B3C4D5E6', 'h': 'F7G8H9I0J1K2L3M4',
+    'i': 'N5O6P7Q8R9S0T1U2', 'j': 'V3W4X5Y6Z7A8B9C0', 'k': 'D1E2F3G4H5I6J7K8', 'l': 'L9M0N1O2P3Q4R5S6',
+    'm': 'T7U8V9W0X1Y2Z3A4', 'n': 'B5C6D7E8F9G0H1I2', 'o': 'J3K4L5M6N7O8P9Q0', 'p': 'R1S2T3U4V5W6X7Y8',
+    'q': 'Z9A0B1C2D3E4F5G6', 'r': 'H7I8J9K0L1M2N3O4', 's': 'P5Q6R7S8T9U0V1W2', 't': 'X3Y4Z5A6B7C8D9E0',
+    'u': 'F1G2H3I4J5K6L7M8', 'v': 'N9O0P1Q2R3S4T5U6', 'w': 'V7W8X9Y0Z1A2B3C4', 'x': 'D5E6F7G8H9I0J1K2',
+    'y': 'L3M4N5O6P7Q8R9S0', 'z': 'T1U2V3W4X5Y6Z7A8', ' ': 'B9C0D1E2F3G4H5I6'
+  },
+  '32': {
+    'a': '00000001000000100000001100000100', 'b': '00000010000000110000001100001000', 'c': '00000100000001000000010000001100',
+    'd': '00000110000001110000010100000100', 'e': '00001000000010000000011000001000', 'f': '00001010000010110000011100001100',
+    'g': '00001100000011000000010000001100', 'h': '00001110000011110000010100000100', 'i': '00010000000100000000011000001000',
+    'j': '00010010000100110000011100001100', 'k': '00010100000101000000010000001100', 'l': '00010110000101110000010100000100',
+    'm': '00011000000110000000011000001000', 'n': '00011010000110110000011100001100', 'o': '00011100000111000000010000001100',
+    'p': '00011110000111110000010100000100', 'q': '00100000001000000000011000001000', 'r': '00100010001000110000011100001100',
+    's': '00100100001001000000010000001100', 't': '00100110001001110000010100000100', 'u': '00101000001010000000011000001000',
+    'v': '00101010001010110000011100001100', 'w': '00101100001011000000010000001100', 'x': '00101110001011110000010100000100',
+    'y': '00110000001100000000011000001000', 'z': '00110010001100110000011100001100', ' ': '00110100001101000000010000001100'
+  }
 };
 
 const ASCII_TABLE = Object.fromEntries([...Array(128)].map((_, i) => [String.fromCharCode(i), i.toString().padStart(3, '0')]));
@@ -35,6 +55,8 @@ function App() {
   const [mode, setMode] = useState('encode');
   const [error, setError] = useState('');
   const [customTable, setCustomTable] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+
 
   const handleConversion = useCallback(() => {
     setError('');
@@ -85,12 +107,18 @@ function App() {
         try {
           const uploadedTable = JSON.parse(e.target.result);
           setCustomTable(uploadedTable);
+          setSelectedFile(file.name); // Guardar el nombre del archivo seleccionado
         } catch (error) {
           setError('Invalid JSON file');
         }
       };
       reader.readAsText(file);
     }
+  };
+  const handleFileClear = () => {
+    setCustomTable(null);
+    setSelectedFile(null);
+    document.getElementById('fileInput').value = null;
   };
 
   useEffect(() => {
@@ -137,6 +165,8 @@ function App() {
           <option value="2">2 bits</option>
           <option value="4">4 bits</option>
           <option value="8">8 bits</option>
+          <option value="16">16 bits</option>
+          <option value="32">32 bits</option>
           <option value="ASCII">ASCII</option>
         </select>
       </div>
@@ -156,33 +186,52 @@ function App() {
         <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>
       )}
 
-      <div style={{ marginBottom: '10px'
-}}>
-<label htmlFor="output" style={{ display: 'block', marginBottom: '5px' }}>Output:</label>
-<textarea
-id="output"
-style={{ width: '100%', padding: '5px', height: '100px' }}
-value={outputText}
-readOnly
-placeholder="Output will be shown here"
-/>
-</div>
-  <button
-    style={{
-      width: '100%', backgroundColor: '#1A8FE3', color: '#fff', padding: '10px', border: 'none',
-      borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px'
-    }}
-    onClick={handleDownload}
-  >
-    Download Encoding Key
-  </button>
+      <div style={{ marginBottom: '10px'}}>
 
-  <input
-    type="file"
-    style={{ marginBottom: '10px' }}
-    accept=".json"
-    onChange={handleFileUpload}
-  />
+        <label htmlFor="output" style={{ display: 'block', marginBottom: '5px' }}>Output:</label>
+          <textarea
+          id="output"
+          style={{ width: '100%', padding: '5px', height: '100px' }}
+          value={outputText}
+          readOnly
+          placeholder="Output will be shown here"
+          />
+      </div>
+    <button
+      style={{
+        width: '100%', backgroundColor: '#1A8FE3', color: '#fff', padding: '10px', border: 'none',
+        borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px'
+      }}
+      onClick={handleDownload}
+    >
+      Download Encoding Key
+    </button>
+
+    <div style={{ marginBottom: '10px' }}>
+        <input
+          type="file"
+          id="fileInput"
+          style={{ marginBottom: '10px' }}
+          accept=".json"
+          onChange={handleFileUpload}
+        />
+        {selectedFile && (
+          <button
+            style={{
+              marginLeft: '10px',
+              padding: '5px 10px',
+              backgroundColor: '#f44336',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+            onClick={handleFileClear}
+          >
+            Clear File
+          </button>
+        )}
+      </div>
 
 </div>
 );
