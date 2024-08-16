@@ -36,9 +36,16 @@
     transform: rotate(360deg);
   }
 }
-body{
-  background-color: #6610F2;
+body {
+  background-color: #121111;
+  background-image: url(/src/images/541c9b8f476b22e0161293c7d23dde4c51176892r1-871-929_hq.gif);
+  background-size: contain;    /* Ajusta la imagen para que se contenga dentro del fondo sin estirarse */
+  background-position: center; /* Centra la imagen en la pantalla */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-attachment: fixed; /* Hace que la imagen permanezca fija al hacer scroll */
 }
+
 #container{
+  opacity: 0.8;
   background-color: white;
 }

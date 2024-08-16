@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './App.css'
+import './App.css';
 
 const ENCODING_TABLES = {
   '2': {
@@ -34,60 +34,80 @@ function App() {
   const [bits, setBits] = useState('2');
   const [mode, setMode] = useState('encode');
   const [error, setError] = useState('');
+  const [customTable, setCustomTable] = useState(null);
 
   const handleConversion = useCallback(() => {
     setError('');
     let result = '';
 
-    if (bits === 'ASCII') {
-      if (mode === 'encode') {
-        result = Array.from(inputText).map(char => ASCII_TABLE[char] || char).join(' ');
-      } else {
-        const codes = inputText.split(' ');
-        result = codes.map(code => REVERSE_ASCII_TABLE[code] || code).join('');
-      }
-    } else {
-      const table = mode === 'encode' ? ENCODING_TABLES[bits] : reverseTable(ENCODING_TABLES[bits]);
-      if (!table) {
-        setError(`Invalid encoding: ${bits} bits`);
-        return;
-      }
+    const table = customTable || (mode === 'encode' ? ENCODING_TABLES[bits] : reverseTable(ENCODING_TABLES[bits]));
+    
+    if (!table) {
+      setError(`Invalid encoding: ${bits} bits`);
+      return;
+    }
 
-      if (mode === 'encode') {
-        result = Array.from(inputText.toLowerCase()).map(char => table[char] || char).join('');
-      } else {
-        let buffer = '';
-        for (let char of inputText) {
-          buffer += char;
-          if (table[buffer]) {
-            result += table[buffer];
-            buffer = '';
-          }
+    if (mode === 'encode') {
+      result = Array.from(inputText.toLowerCase()).map(char => table[char] || char).join('');
+    } else {
+      let buffer = '';
+      for (let char of inputText) {
+        buffer += char;
+        if (table[buffer]) {
+          result += table[buffer];
+          buffer = '';
         }
-        if (buffer) {
-          setError('Invalid encoded text');
-          return;
-        }
+      }
+      if (buffer) {
+        setError('Invalid encoded text');
+        return;
       }
     }
 
     setOutputText(result);
-  }, [inputText, bits, mode]);
+  }, [inputText, bits, mode, customTable]);
+
+  const handleDownload = () => {
+    const table = customTable || ENCODING_TABLES[bits];
+    const element = document.createElement('a');
+    const file = new Blob([JSON.stringify(table, null, 2)], { type: 'application/json' });
+    element.href = URL.createObjectURL(file);
+    element.download = `encoding_table_${bits}_bits.json`;
+    document.body.appendChild(element);
+    element.click();
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const uploadedTable = JSON.parse(e.target.result);
+          setCustomTable(uploadedTable);
+        } catch (error) {
+          setError('Invalid JSON file');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
 
   useEffect(() => {
     handleConversion();
   }, [handleConversion]);
 
   return (
-    <div id='container' style={{maxWidth: '600px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px', fontFamily: 'Arial, sans-serif', alignContent: 'center'}}>
-      <h1 style={{textAlign: 'center', color: '#333'}} className="heading">
-        <span className="heading-highlight" style={{color: '#1A8FE3'}}>Real-time</span>{' '}
-        <span className="heading-normal" >Text Encoder/Decoder</span>
+    <div id='container' style={{ maxWidth: '600px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px', fontFamily: 'Arial, sans-serif', alignContent: 'center' }}>
+      <h1 style={{ textAlign: 'center', color: '#333' }} className="heading">
+        <span className="heading-highlight" style={{ color: '#1A8FE3' }}>Real-time</span>{' '}
+        <span className="heading-normal">Text Encoder/Decoder</span>
       </h1>
-      <div style={{marginBottom: '10px'}}>
-        <label style={{display: 'block', marginBottom: '5px'}}>Mode:</label>
+
+      <div style={{ marginBottom: '10px' }}>
+        <label style={{ display: 'block', marginBottom: '5px' }}>Mode:</label>
         <div>
-          <label style={{marginRight: '10px'}}>
+          <label style={{ marginRight: '10px' }}>
             <input
               type="radio"
               value="encode"
@@ -106,11 +126,11 @@ function App() {
         </div>
       </div>
 
-      <div style={{marginBottom: '10px'}}>
-        <label htmlFor="bits" style={{display: 'block', marginBottom: '5px'}}>Encoding:</label>
+      <div style={{ marginBottom: '10px' }}>
+        <label htmlFor="bits" style={{ display: 'block', marginBottom: '5px' }}>Encoding:</label>
         <select
           id="bits"
-          style={{width: '100%', padding: '5px'}}
+          style={{ width: '100%', padding: '5px' }}
           value={bits}
           onChange={(e) => setBits(e.target.value)}
         >
@@ -121,11 +141,11 @@ function App() {
         </select>
       </div>
 
-      <div style={{marginBottom: '10px'}}>
-        <label htmlFor="input" style={{display: 'block', marginBottom: '5px'}}>Input:</label>
+      <div style={{ marginBottom: '10px' }}>
+        <label htmlFor="input" style={{ display: 'block', marginBottom: '5px' }}>Input:</label>
         <textarea
           id="input"
-          style={{width: '100%', padding: '5px', height: '100px'}}
+          style={{ width: '100%', padding: '5px', height: '100px' }}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder={mode === 'encode' ? "Enter text to encode" : "Enter text to decode"}
@@ -133,15 +153,39 @@ function App() {
       </div>
 
       {error && (
-        <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>
+        <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>
       )}
 
-      <div>
-        <h2>Output:</h2>
-        <p style={{wordBreak: 'break-all', backgroundColor: '#f0f0f0', padding: '10px', minHeight: '100px'}}>{outputText}</p>
-      </div>
-    </div>
-  );
+      <div style={{ marginBottom: '10px'
+}}>
+<label htmlFor="output" style={{ display: 'block', marginBottom: '5px' }}>Output:</label>
+<textarea
+id="output"
+style={{ width: '100%', padding: '5px', height: '100px' }}
+value={outputText}
+readOnly
+placeholder="Output will be shown here"
+/>
+</div>
+  <button
+    style={{
+      width: '100%', backgroundColor: '#1A8FE3', color: '#fff', padding: '10px', border: 'none',
+      borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px'
+    }}
+    onClick={handleDownload}
+  >
+    Download Encoding Key
+  </button>
+
+  <input
+    type="file"
+    style={{ marginBottom: '10px' }}
+    accept=".json"
+    onChange={handleFileUpload}
+  />
+
+</div>
+);
 }
 
 export default App;
