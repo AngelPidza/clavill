@@ -36,30 +36,46 @@
     transform: rotate(360deg);
   }
 }
+
 html, body {
-  height: 100%; /* Asegura que html y body ocupen toda la altura de la ventana */
-  margin: 0; /* Elimina los márgenes predeterminados */
+  height: 100%;
+  margin: 0;
 }
 
 body {
   background-color: #121111;
   background-image: url(/src/images/541c9b8f476b22e0161293c7d23dde4c51176892r1-871-929_hq.gif);
-  background-size: contain; /* Ajusta la imagen para que se contenga dentro del fondo sin estirarse */
-  background-position: center; /* Centra la imagen en la pantalla */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
-  background-attachment: fixed; /* Hace que la imagen permanezca fija al hacer scroll */
-  display: flex; /* Usa Flexbox para centrar el contenedor */
-  align-items: center; /* Centra verticalmente */
-  justify-content: center; /* Centra horizontalmente */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #container {
-  width: 100%; /* Asegura que el contenedor se ajuste al tamaño disponible */
-  max-width: 600px; /* Define un ancho máximo para el contenedor */
+  width: 100%;
+  max-width: 600px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-family: Arial, sans-serif;
   opacity: 0.8;
-  background-color: white;
+  background-color: rgb(190, 190, 190);
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 600px) {
+  #container {
+    max-width: 90%; /* Reduce el ancho máximo en dispositivos móviles */
+  }
+}
+
+/* Para pantallas aún más pequeñas */
+@media (max-width: 400px) {
+  #container {
+    max-width: 95%; /* Aumenta ligeramente el ancho en pantallas muy pequeñas */
+    padding: 15px; /* Reduce el padding para aprovechar mejor el espacio */
+  }
 }

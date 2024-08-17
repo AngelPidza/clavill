@@ -135,7 +135,7 @@ function App() {
   }, [handleConversion]);
 
   return (
-    <div id='container' style={{ maxWidth: '600px', margin: '20px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px', fontFamily: 'Arial, sans-serif', alignContent: 'center' }}>
+    <div id='container' style={{ maxWidth: '505px', margin: '20px auto', padding: '30px', border: '5px solid #04b0db', borderRadius: '5px', fontFamily: 'Arial, sans-serif', alignContent: 'center' }}>
       <h1 style={{ textAlign: 'center', color: '#333' }} className="heading">
         <span className="heading-highlight" style={{ color: '#1A8FE3' }}>Real-time</span>{' '}
         <span className="heading-normal">Text Encoder/Decoder</span>
@@ -220,7 +220,7 @@ function App() {
         <input
           type="file"
           id="fileInput"
-          style={{ marginBottom: '10px' }}
+          style={{ marginBottom: '10px'}}
           accept=".json"
           onChange={handleFileUpload}
         />
@@ -240,8 +240,7 @@ function App() {
             Clear File
           </button>
         )}
-      </div>
-
+    </div>
 </div>
 );
 }
