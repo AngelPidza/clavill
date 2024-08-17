@@ -62,27 +62,35 @@ function App() {
     setError('');
     let result = '';
 
-    const table = customTable || (mode === 'encode' ? ENCODING_TABLES[bits] : reverseTable(ENCODING_TABLES[bits]));
-    
-    if (!table) {
-      setError(`Invalid encoding: ${bits} bits`);
-      return;
-    }
-
-    if (mode === 'encode') {
-      result = Array.from(inputText.toLowerCase()).map(char => table[char] || char).join('');
-    } else {
-      let buffer = '';
-      for (let char of inputText) {
-        buffer += char;
-        if (table[buffer]) {
-          result += table[buffer];
-          buffer = '';
-        }
+    if (bits === 'ASCII') {
+      if (mode === 'encode') {
+        result = Array.from(inputText).map(char => ASCII_TABLE[char] || char).join(' ');
+      } else {
+        result = inputText.split(' ').map(code => REVERSE_ASCII_TABLE[code] || code).join('');
       }
-      if (buffer) {
-        setError('Invalid encoded text');
+    } else {
+      const table = customTable || (mode === 'encode' ? ENCODING_TABLES[bits] : reverseTable(ENCODING_TABLES[bits]));
+      
+      if (!table) {
+        setError(`Invalid encoding: ${bits} bits`);
         return;
+      }
+
+      if (mode === 'encode') {
+        result = Array.from(inputText.toLowerCase()).map(char => table[char] || char).join('');
+      } else {
+        let buffer = '';
+        for (let char of inputText) {
+          buffer += char;
+          if (table[buffer]) {
+            result += table[buffer];
+            buffer = '';
+          }
+        }
+        if (buffer) {
+          setError('Invalid encoded text');
+          return;
+        }
       }
     }
 
@@ -90,7 +98,7 @@ function App() {
   }, [inputText, bits, mode, customTable]);
 
   const handleDownload = () => {
-    const table = customTable || ENCODING_TABLES[bits];
+    const table = bits === 'ASCII' ? ASCII_TABLE : (customTable || ENCODING_TABLES[bits]);
     const element = document.createElement('a');
     const file = new Blob([JSON.stringify(table, null, 2)], { type: 'application/json' });
     element.href = URL.createObjectURL(file);
@@ -107,7 +115,7 @@ function App() {
         try {
           const uploadedTable = JSON.parse(e.target.result);
           setCustomTable(uploadedTable);
-          setSelectedFile(file.name); // Guardar el nombre del archivo seleccionado
+          setSelectedFile(file.name);
         } catch (error) {
           setError('Invalid JSON file');
         }
@@ -115,6 +123,7 @@ function App() {
       reader.readAsText(file);
     }
   };
+
   const handleFileClear = () => {
     setCustomTable(null);
     setSelectedFile(null);
