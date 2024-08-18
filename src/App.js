@@ -135,112 +135,91 @@ function App() {
   }, [handleConversion]);
 
   return (
-    <div id='container' style={{ maxWidth: '505px', margin: '20px auto', padding: '30px', border: '5px solid #04b0db', borderRadius: '5px', fontFamily: 'Arial, sans-serif', alignContent: 'center' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }} className="heading">
-        <span className="heading-highlight" style={{ color: '#1A8FE3' }}>Real-time</span>{' '}
-        <span className="heading-normal">Text Encoder/Decoder</span>
-      </h1>
+    <div id='container'>
+  <h1 className="heading">
+    <span className="heading-highlight">Real-time</span>{' '}
+    <span className="heading-normal">Text Encoder/Decoder</span>
+  </h1>
 
-      <div style={{ marginBottom: '10px' }}>
-        <label style={{ display: 'block', marginBottom: '5px' }}>Mode:</label>
-        <div>
-          <label style={{ marginRight: '10px' }}>
-            <input
-              type="radio"
-              value="encode"
-              checked={mode === 'encode'}
-              onChange={() => setMode('encode')}
-            /> Encode
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="decode"
-              checked={mode === 'decode'}
-              onChange={() => setMode('decode')}
-            /> Decode
-          </label>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: '10px' }}>
-        <label htmlFor="bits" style={{ display: 'block', marginBottom: '5px' }}>Encoding:</label>
-        <select
-          id="bits"
-          style={{ width: '100%', padding: '5px' }}
-          value={bits}
-          onChange={(e) => setBits(e.target.value)}
-        >
-          <option value="2">2 bits</option>
-          <option value="4">4 bits</option>
-          <option value="8">8 bits</option>
-          <option value="16">16 bits</option>
-          <option value="32">32 bits</option>
-          <option value="ASCII">ASCII</option>
-        </select>
-      </div>
-
-      <div style={{ marginBottom: '10px' }}>
-        <label htmlFor="input" style={{ display: 'block', marginBottom: '5px' }}>Input:</label>
-        <textarea
-          id="input"
-          style={{ width: '100%', padding: '5px', height: '100px' }}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder={mode === 'encode' ? "Enter text to encode" : "Enter text to decode"}
-        />
-      </div>
-
-      {error && (
-        <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>
-      )}
-
-      <div style={{ marginBottom: '10px'}}>
-
-        <label htmlFor="output" style={{ display: 'block', marginBottom: '5px' }}>Output:</label>
-          <textarea
-          id="output"
-          style={{ width: '100%', padding: '5px', height: '100px' }}
-          value={outputText}
-          readOnly
-          placeholder="Output will be shown here"
-          />
-      </div>
-    <button
-      style={{
-        width: '100%', backgroundColor: '#1A8FE3', color: '#fff', padding: '10px', border: 'none',
-        borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px'
-      }}
-      onClick={handleDownload}
-    >
-      Download Encoding Key
-    </button>
-
-    <div style={{ marginBottom: '10px' }}>
+  <div className="form-group">
+    <label>Mode:</label>
+    <div>
+      <label className="radio-label">
         <input
-          type="file"
-          id="fileInput"
-          style={{ marginBottom: '10px'}}
-          accept=".json"
-          onChange={handleFileUpload}
-        />
-        {selectedFile && (
-          <button
-            style={{
-              marginLeft: '10px',
-              padding: '5px 10px',
-              backgroundColor: '#f44336',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-            }}
-            onClick={handleFileClear}
-          >
-            Clear File
-          </button>
-        )}
+          type="radio"
+          value="encode"
+          checked={mode === 'encode'}
+          onChange={() => setMode('encode')}
+        /> Encode
+      </label>
+      <label className="radio-label">
+        <input
+          type="radio"
+          value="decode"
+          checked={mode === 'decode'}
+          onChange={() => setMode('decode')}
+        /> Decode
+      </label>
     </div>
+  </div>
+
+  <div className="form-group">
+    <label htmlFor="bits">Encoding:</label>
+    <select
+      id="bits"
+      value={bits}
+      onChange={(e) => setBits(e.target.value)}
+    >
+      <option value="2">2 bits</option>
+      <option value="4">4 bits</option>
+      <option value="8">8 bits</option>
+      <option value="16">16 bits</option>
+      <option value="32">32 bits</option>
+      <option value="ASCII">ASCII</option>
+    </select>
+  </div>
+
+  <div className="form-group">
+    <label htmlFor="input">Input:</label>
+    <textarea
+      id="input"
+      value={inputText}
+      onChange={(e) => setInputText(e.target.value)}
+      placeholder={mode === 'encode' ? "Enter text to encode" : "Enter text to decode"}
+    />
+  </div>
+
+  {error && (
+    <div className="error-message">{error}</div>
+  )}
+
+  <div className="form-group">
+    <label htmlFor="output">Output:</label>
+    <textarea
+      id="output"
+      value={outputText}
+      readOnly
+      placeholder="Output will be shown here"
+    />
+  </div>
+
+  <button className="download-button" onClick={handleDownload}>
+    Download Encoding Key
+  </button>
+
+  <div className="file-upload">
+    <input
+      type="file"
+      id="fileInput"
+      accept=".json"
+      onChange={handleFileUpload}
+    />
+    {selectedFile && (
+      <button className="clear-file-button" onClick={handleFileClear}>
+        Clear File
+      </button>
+    )}
+  </div>
 </div>
 );
 }

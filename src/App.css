@@ -42,6 +42,8 @@ html, body {
   margin: 0;
 }
 
+/* Estilos existentes... */
+
 body {
   background-color: #121111;
   background-image: url(/src/images/541c9b8f476b22e0161293c7d23dde4c51176892r1-871-929_hq.gif);
@@ -56,19 +58,29 @@ body {
 
 #container {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 5px solid #04b0db;
   border-radius: 5px;
   font-family: Arial, sans-serif;
   opacity: 0.8;
   background-color: rgb(190, 190, 190);
+  margin: 20px auto;
+}
+
+/* Media query para tablets */
+@media (max-width: 768px) {
+  #container {
+    max-width: 80%;
+    padding: 15px;
+  }
 }
 
 /* Media query para dispositivos móviles */
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   #container {
-    max-width: 90%; /* Reduce el ancho máximo en dispositivos móviles */
+    max-width: 90%;
+    padding: 10px;
   }
 }
 
@@ -78,4 +90,66 @@ body {
     max-width: 95%; /* Aumenta ligeramente el ancho en pantallas muy pequeñas */
     padding: 15px; /* Reduce el padding para aprovechar mejor el espacio */
   }
+}
+
+.heading {
+  text-align: center;
+  color: #333;
+}
+
+.heading-highlight {
+  color: #1A8FE3;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.radio-label {
+  margin-right: 10px;
+}
+
+select, textarea {
+  width: 100%;
+  padding: 5px;
+}
+
+textarea {
+  height: 100px;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.download-button {
+  width: 100%;
+  background-color: #1A8FE3;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.file-upload {
+  margin-bottom: 10px;
+}
+
+.clear-file-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
